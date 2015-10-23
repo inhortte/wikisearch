@@ -1,0 +1,8 @@
+node_modules/**
+!node_modules/vdna/
+!node_modules/vdna/**
+dist
+.tmp
+.sass-cache
+*~
+wiki_8000_dump

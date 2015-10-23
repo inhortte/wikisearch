@@ -1,0 +1,19 @@
+{
+  "name": "wikisearch",
+  "version": "1.0.0",
+  "description": "Fulltext wiki search returning categories",
+  "main": "wikisearch.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Bob Shelton",
+  "license": "ISC",
+  "dependencies": {
+    "mongodb": "*",
+    "express": "*",
+    "body-parser": "*"
+  },
+  "engines": {
+    "node": ">=0.12.0"
+  }
+}
