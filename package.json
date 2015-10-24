@@ -13,6 +13,16 @@
     "express": "*",
     "body-parser": "*"
   },
+  "devDependencies": {
+    "gulp": "*",
+    "gulp-babel": "*",
+    "gulp-browserify": "*",
+    "gulp-sourcemaps": "*",
+    "gulp-util": "*",
+    "source-map-support": "*",
+    "run-sequence": "*",
+    "del": "*"
+  },
   "engines": {
     "node": ">=0.12.0"
   }
