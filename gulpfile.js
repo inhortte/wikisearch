@@ -47,7 +47,6 @@ gulp.task('rewire', function() {
   });
 });
 
-// ------------------- to be revamped later.
 gulp.task('build', function(cb) {
   runSequence('babel', 'browserify', cb);
 });
