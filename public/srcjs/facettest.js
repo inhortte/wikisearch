@@ -4,12 +4,24 @@ class FacetTest extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      leprosy: this.props.leprosy
+      leprosy: this.props.leprosy,
+      facetMatches: "US Election, US Politics, Republican Party, Current Events, Donald Mumps"
     }
   }
 
   submitLeprosy() {
-    alert(this.state.leprosy);
+    var that = this;
+    $.ajax({
+      method: 'POST',
+      data: { leprosy: this.state.leprosy },
+      dataType: 'json',
+      url: '/'
+    }).done(function(res, status, xhr) {
+      console.log('SUCCESS!!!!!!');
+      that.setState({facetMatches: res.slice(0,10).join(', ')});
+    }).fail(function(xhr, status, err) {
+      console.log('ERROR: ' + status + JSON.stringify(err));
+    });
   }
 
   leperChange(e) {
@@ -43,7 +55,7 @@ class FacetTest extends React.Component {
           <tbody>
             <tr>
               <td style={{width: '20%'}}>Facet Matches:</td>
-              <td style={{width: '50%', border: '1px solid white', padding: '5'}}>US Election, US Politics, Republican Party, Current Events, Donald Trump</td>
+              <td style={{width: '50%', border: '1px solid white', padding: '5'}}>{this.state.facetMatches}</td>
               <td style={{width: '20%'}}></td>
             </tr>
           </tbody>

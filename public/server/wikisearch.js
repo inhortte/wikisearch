@@ -7,25 +7,33 @@ let app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 
 
-mongo.connect('mongodb://127.0.0.1:27017/en_wikipedia', function(err, db) {
+mongo.connect('mongodb://127.0.0.1:27017/wikitest', function(err, db) {
   if(err) throw err;
 
-  /*
   app.post('/', function(req, res) {
-    db.collection('wikipedia', function(err, coll) {
+    console.log(req.body.leprosy);
+    let categories = [];
+    db.collection('wiki', function(err, coll) {
       if(err) throw err;
-      coll.find({}, {
-        "limit": 1,
-        "skip": 3
-      }).nextObject(function(err, data) {
-        if(err) throw err;
-        res.send(data);
-        //console.log(JSON.stringify(data['text']['Intro']));
+      let pattern = '/' + req.body.leprosy + '/';
+      coll.find({allText: {$regex: req.body.leprosy}}, {categories: 1}).each(function(err, data) {
+        if(data !== null) {
+          if(err) throw err;
+          // console.log(data);
+          categories = categories.concat(data['categories']);
+          // if(categories.length > 20) {
+            //db.close();
+            // console.log('\n----------------------CATEGORIES' + JSON.stringify(categories));
+            //res.end(categories.join('; '));
+          //}
+        } else {
+          // db.close();
+          // console.log('\n----------------------CATEGORIES' + JSON.stringify(categories));
+          res.end(JSON.stringify(categories));
+        }
       });
     });
-    // res.end("ja");
   });
-  */
 
   app.use(express.static('public'));
 
