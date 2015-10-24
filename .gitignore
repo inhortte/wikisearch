@@ -5,4 +5,5 @@ dist
 .tmp
 .sass-cache
 *~
+public/bower_components*
 wiki_8000_dump
