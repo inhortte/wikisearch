@@ -9,7 +9,17 @@ class FacetTest extends React.Component {
   }
 
   submitLeprosy() {
-    alert(this.state.leprosy);
+    // alert(this.state.leprosy);
+    $.ajax({
+      method: 'POST',
+      data: { leprosy: this.state.leprosy },
+      dataType: 'json',
+      url: '/'
+    }).done(function(res, status, xhr) {
+      console.log('SUCCESS: ' + JSON.stringify(res));
+    }).fail(function(xhr, status, err) {
+      console.log('ERROR: ' + status + JSON.stringify(err));
+    });
   }
 
   leperChange(e) {

@@ -7,12 +7,14 @@ let app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 
 
-mongo.connect('mongodb://127.0.0.1:27017/en_wikipedia', function(err, db) {
+mongo.connect('mongodb://127.0.0.1:27017/wikitest', function(err, db) {
   if(err) throw err;
 
-  /*
   app.post('/', function(req, res) {
-    db.collection('wikipedia', function(err, coll) {
+    console.log(req.body.leprosy);
+    res.end('{ "thurk": "CHRISTIAN IS A NIGGER" }');
+    /*
+    db.collection('wiki', function(err, coll) {
       if(err) throw err;
       coll.find({}, {
         "limit": 1,
@@ -24,8 +26,8 @@ mongo.connect('mongodb://127.0.0.1:27017/en_wikipedia', function(err, db) {
       });
     });
     // res.end("ja");
+    */
   });
-  */
 
   app.use(express.static('public'));
 
