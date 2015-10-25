@@ -97,7 +97,6 @@ class FacetsShownSelect extends React.Component {
   }
 
   handleChange(e) {
-    console.log('numero de facetes: ' + e.target.value);
     this.props.changeMatchesShown(e.target.value);
   }
 
