@@ -49,15 +49,13 @@ class FacetTest extends React.Component {
   }
 
   fFilterChange(e) {
-    this.setState({fFilter: e.target.value}, function() {
-      this.showFacets();
-    });
+    new Promise(resolve => this.setState({fFilter: e.target.value}, resolve)).then(() => this.showFacets())
+                               .catch(function(err) { console.error(err); });
   }
 
   changeMatchesShown(n) {
-    this.setState({matchesShown: n}, function() {
-      this.showFacets();
-    });
+    new Promise(resolve => this.setState({matchesShown: n}, resolve)).then(() => this.showFacets())
+                               .catch(function(err) { console.error(err); });
   }
 
   render() {
