@@ -11,12 +11,16 @@
   "dependencies": {
     "mongodb": "*",
     "express": "*",
-    "body-parser": "*"
+    "body-parser": "*",
+    "react": "*",
+    "react-dom": "*",
+    "jquery": "*"
   },
   "devDependencies": {
     "gulp": "*",
     "gulp-babel": "*",
     "gulp-browserify": "*",
+    "js-tokens": "*",
     "gulp-sourcemaps": "*",
     "gulp-util": "*",
     "source-map-support": "*",
