@@ -5,7 +5,8 @@ class FacetTest extends React.Component {
     super(props);
     this.state = {
       leprosy: this.props.leprosy,
-      facetMatches: "US Election, US Politics, Republican Party, Current Events, Donald Mumps"
+      facetMatches: ['US Election', 'US Politics', 'Republican Party', 'Current Events', 'Donald Mumps'],
+      matchesShown: 10
     }
   }
 
@@ -18,15 +19,22 @@ class FacetTest extends React.Component {
       url: '/'
     }).done(function(res, status, xhr) {
       console.log('SUCCESS!!!!!!');
-      that.setState({facetMatches: res.slice(0,10).join(', ')});
+      that.setState({facetMatches: res});
     }).fail(function(xhr, status, err) {
       console.log('ERROR: ' + status + JSON.stringify(err));
     });
   }
 
   leperChange(e) {
-    // console.log(e.target.value);
     this.setState({leprosy: e.target.value});
+  }
+
+  showFacets() {
+    return this.state.facetMatches.slice(0, this.state.matchesShown).join(', ');
+  }
+
+  changeMatchesShown(n) {
+    this.setState({matchesShown: n});
   }
 
   render() {
@@ -54,8 +62,8 @@ class FacetTest extends React.Component {
         <table>
           <tbody>
             <tr>
-              <td style={{width: '20%'}}>Facet Matches:</td>
-              <td style={{width: '50%', border: '1px solid white', padding: '5'}}>{this.state.facetMatches}</td>
+              <td style={{width: '20%', valign: 'top'}}>Facet Matches:</td>
+              <td style={{width: '50%', border: '1px solid white', padding: '5'}}>{this.showFacets()}</td>
               <td style={{width: '20%'}}></td>
             </tr>
           </tbody>
@@ -67,11 +75,37 @@ class FacetTest extends React.Component {
           <tbody>
             <tr>
               <td style={{width: '20%'}}>Matching Threshold:</td>
-              <td style={{width: '50%', border: '1px solid black', padding: '5'}}>ADD SETTINGS HERE THAT WE CAN PLAY WITH THAT MAKE SENSE. PERHAPS WE’LL HAVE A FACET FILTER LIST.</td>
+              <td style={{width: '50%', border: '1px solid black', padding: '5'}}><FacetsShownSelect changeMatchesShown={this.changeMatchesShown.bind(this)} /></td>
               <td style={{width: '20%'}}></td>
             </tr>
           </tbody>
         </table>
+      </div>
+    );
+  }
+}
+
+class FacetsShownSelect extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  makeOption(value, text) {
+    return (
+      <option key={value} value={value}>{text}</option>
+    );
+  }
+
+  handleChange(e) {
+    console.log('numero de facetes: ' + e.target.value);
+    this.props.changeMatchesShown(e.target.value);
+  }
+
+  render() {
+    let options = [10, 25, 50, 100].map(n => this.makeOption(n, n.toString()));
+    return (
+      <div>
+        Facets shown: <select onChange={this.handleChange.bind(this)}>{options}</select>
       </div>
     );
   }

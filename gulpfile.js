@@ -10,7 +10,7 @@ var gutil = require('gulp-util');
 var path = require('path');
 var srcDir = 'public/srcjs';
 var jsDir = 'public/js';
-var nodeBin = '/home/polaris/src/node4';
+var nodeBin = '/home/polaris/bin';
 
 var babelPaths = {
   vdna: [path.join(srcDir, '*.js')],
@@ -23,7 +23,7 @@ gulp.task('clean', function() {
   ]);
 });
 gulp.task('rewire', function() {
-  var child = spawn(path.join(nodeBin, 'node'), ['bin/rewirewiki.js'], {cwd: process.cwd()}),
+  var child = spawn(path.join(nodeBin, 'node4'), ['bin/rewirewiki.js'], {cwd: process.cwd()}),
       stdout = '',
       stderr = '';
 
@@ -48,7 +48,8 @@ gulp.task('rewire', function() {
 });
 
 gulp.task('build', function(cb) {
-  runSequence('babel', 'browserify', cb);
+//  runSequence('babel', 'browserify', cb);
+  runSequence('babel', cb);
 });
 gulp.task('babel', function() {
   return gulp.src(babelPaths.vdna)
@@ -56,9 +57,9 @@ gulp.task('babel', function() {
              .pipe(babel({
                sourceMaps: 'inline'
              }))
-    // .pipe(sourcemaps.write('.', { sourceRoot: babelPaths.sourceRoot }))
              .pipe(gulp.dest(babelPaths.dest));
 });
+/*
 gulp.task('browserify', function() {
   return gulp.src('public/js/vdnamenu.js')
              .pipe(browserify({
@@ -67,6 +68,7 @@ gulp.task('browserify', function() {
              }))
              .pipe(gulp.dest('public/js/bundle'))
 });
+*/
 gulp.task('watch', function() {
   gulp.watch(babelPaths.vdna, ['build']);
 });
