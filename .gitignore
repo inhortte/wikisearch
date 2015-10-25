@@ -6,4 +6,5 @@ dist
 .sass-cache
 *~
 public/bower_components*
+public/js
 wiki_8000_dump
