@@ -6,7 +6,9 @@ class FacetTest extends React.Component {
     this.state = {
       leprosy: this.props.leprosy,
       facetMatches: ['US Election', 'US Politics', 'Republican Party', 'Current Events', 'Donald Mumps'],
-      matchesShown: 10
+      facetsShown: 'US Election, US Politics, Republican Party, Current Events, Donald Mumps',
+      matchesShown: 10,
+      fFilter: ''
     }
   }
 
@@ -20,21 +22,38 @@ class FacetTest extends React.Component {
     }).done(function(res, status, xhr) {
       console.log('SUCCESS!!!!!!');
       that.setState({facetMatches: res});
+      that.showFacets();
     }).fail(function(xhr, status, err) {
       console.log('ERROR: ' + status + JSON.stringify(err));
     });
+  }
+
+  showFacets() {
+    let matches = this.state.facetMatches;
+    let filterer = this.state.fFilter.trim();
+    if(filterer.length > 0) {
+      let re = new RegExp(filterer, "i");
+      matches = matches.filter(function(el) {
+        return re.test(el);
+      });
+    }
+    this.setState({facetsShown: matches.slice(0, this.state.matchesShown).join(', ')});
   }
 
   leperChange(e) {
     this.setState({leprosy: e.target.value});
   }
 
-  showFacets() {
-    return this.state.facetMatches.slice(0, this.state.matchesShown).join(', ');
+  fFilterChange(e) {
+    this.setState({fFilter: e.target.value}, function() {
+      this.showFacets();
+    });
   }
 
   changeMatchesShown(n) {
-    this.setState({matchesShown: n});
+    this.setState({matchesShown: n}, function() {
+      this.showFacets();
+    });
   }
 
   render() {
@@ -63,7 +82,7 @@ class FacetTest extends React.Component {
           <tbody>
             <tr>
               <td style={{width: '20%', valign: 'top'}}>Facet Matches:</td>
-              <td style={{width: '50%', border: '1px solid white', padding: '5'}}>{this.showFacets()}</td>
+              <td style={{width: '50%', border: '1px solid white', padding: '5'}}>{this.state.facetsShown}</td>
               <td style={{width: '20%'}}></td>
             </tr>
           </tbody>
@@ -75,7 +94,10 @@ class FacetTest extends React.Component {
           <tbody>
             <tr>
               <td style={{width: '20%'}}>Matching Threshold:</td>
-              <td style={{width: '50%', border: '1px solid black', padding: '5'}}><FacetsShownSelect changeMatchesShown={this.changeMatchesShown.bind(this)} /></td>
+              <td style={{width: '50%', border: '1px solid black', padding: '5'}}>
+                <FacetsShownSelect width={'50%'} changeMatchesShown={this.changeMatchesShown.bind(this)} />
+                <FacetFilter width={'50%'} fFilterChange={this.fFilterChange.bind(this)} />
+              </td>
               <td style={{width: '20%'}}></td>
             </tr>
           </tbody>
@@ -102,13 +124,37 @@ class FacetsShownSelect extends React.Component {
 
   render() {
     let options = [10, 25, 50, 100].map(n => this.makeOption(n, n.toString()));
+    let style = { width: this.props.width };
     return (
       <div>
-        Facets shown: <select onChange={this.handleChange.bind(this)}>{options}</select>
+        Facets shown: <select onChange={this.handleChange.bind(this)} style={style}>{options}</select>
       </div>
     );
   }
 }
+FacetsShownSelect.propTypes = {
+  width: React.PropTypes.string.isRequired
+};
+FacetsShownSelect.defaultProps = { width: '100%' };
+
+class FacetFilter extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    let style = { width: this.props.width };
+    return (
+      <div>
+        Facet filter: <input type="text" style={style} onChange={this.props.fFilterChange.bind(this)} value={this.props.fFilter} />
+      </div>
+    );
+  }
+}
+FacetFilter.propTypes = {
+  width: React.PropTypes.string.isRequired
+};
+FacetFilter.defaultProps = { width: '100%' };
 
 class LeperForm extends React.Component {
   constructor(props) {
