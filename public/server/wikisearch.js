@@ -15,21 +15,21 @@ mongo.connect('mongodb://127.0.0.1:27017/wikitest', function(err, db) {
     let categories = [];
     db.collection('wiki', function(err, coll) {
       if(err) throw err;
-      let pattern = '/' + req.body.leprosy + '/';
-      coll.find({allText: {$regex: req.body.leprosy}}, {categories: 1}).each(function(err, data) {
+      let cursor = coll.find({allText: {$regex: req.body.leprosy, $options: 'i'}}, {categories: 1}).limit(100);
+      cursor.each(function(err, data) {
         if(data !== null) {
           if(err) throw err;
-          // console.log(data);
           categories = categories.concat(data['categories']);
-          // if(categories.length > 20) {
-            //db.close();
-            // console.log('\n----------------------CATEGORIES' + JSON.stringify(categories));
-            //res.end(categories.join('; '));
-          //}
+
+          if(categories.length > 100) {
+            cursor.close(function() {
+              console.log('cursor closed');
+            });
+          }
         } else {
           // db.close();
           // console.log('\n----------------------CATEGORIES' + JSON.stringify(categories));
-          res.end(JSON.stringify(categories));
+          res.end(JSON.stringify(categories.slice(0,100)));
         }
       });
     });
