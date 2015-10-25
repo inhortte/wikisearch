@@ -48,8 +48,8 @@ gulp.task('rewire', function() {
 });
 
 gulp.task('build', function(cb) {
-//  runSequence('babel', 'browserify', cb);
-  runSequence('babel', cb);
+  runSequence('babel', 'browserify', cb);
+//  runSequence('babel', cb);
 });
 gulp.task('babel', function() {
   return gulp.src(babelPaths.vdna)
@@ -59,16 +59,14 @@ gulp.task('babel', function() {
              }))
              .pipe(gulp.dest(babelPaths.dest));
 });
-/*
 gulp.task('browserify', function() {
-  return gulp.src('public/js/vdnamenu.js')
+  return gulp.src('public/js/facettest.js')
              .pipe(browserify({
                insertGlobals: true,
                debug: true
              }))
              .pipe(gulp.dest('public/js/bundle'))
 });
-*/
 gulp.task('watch', function() {
   gulp.watch(babelPaths.vdna, ['build']);
 });
