@@ -1,5 +1,9 @@
 'use strict';
 
+let React = require('react');
+let ReactDOM = require('react-dom');
+let $ = require('jquery');
+
 class FacetTest extends React.Component {
   constructor(props) {
     super(props);
@@ -179,7 +183,7 @@ LeperForm.propTypes = {
 LeperForm.defaultProps = { leprosy: '' };
 
 
-React.render(
+ReactDOM.render(
   <FacetTest />,
   document.getElementById('facettest')
 );
