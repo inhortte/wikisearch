@@ -1,11 +1,12 @@
-var gulp = require('gulp');
-var sourcemaps = require('gulp-sourcemaps');
-var babel = require('gulp-babel');
-var browserify = require('gulp-browserify');
+var gulp        = require('gulp');
+var sourcemaps  = require('gulp-sourcemaps');
+var babel       = require('gulp-babel');
+var browserify  = require('gulp-browserify');
+var uglify      = require('gulp-uglify');
 var runSequence = require('run-sequence');
-var del = require('del');
-var spawn = require('child_process').spawn;
-var gutil = require('gulp-util');
+var del         = require('del');
+var spawn       = require('child_process').spawn;
+var gutil       = require('gulp-util');
 
 var path = require('path');
 var srcDir = 'public/srcjs';
@@ -13,7 +14,7 @@ var jsDir = 'public/js';
 var nodeBin = '/home/polaris/bin';
 
 var babelPaths = {
-  vdna: [path.join(srcDir, '*.js')],
+  src: [path.join(srcDir, '*.js')],
   dest: jsDir
 };
 gulp.task('clean', function() {
@@ -46,20 +47,18 @@ gulp.task('rewire', function() {
     gutil.log("You access complete stdout and stderr from here"); // stdout, stderr
   });
 });
-
-gulp.task('build', function(cb) {
-  runSequence('babel', 'browserify', cb);
-//  runSequence('babel', cb);
+gulp.task('build-dev', function(cb) {
+  runSequence('babel-dev', 'browserify-dev', cb);
 });
-gulp.task('babel', function() {
-  return gulp.src(babelPaths.vdna)
+gulp.task('babel-dev', function() {
+  return gulp.src(babelPaths.src)
              .pipe(sourcemaps.init())
              .pipe(babel({
                sourceMaps: 'inline'
              }))
              .pipe(gulp.dest(babelPaths.dest));
 });
-gulp.task('browserify', function() {
+gulp.task('browserify-dev', function() {
   return gulp.src('public/js/facettest.js')
              .pipe(browserify({
                insertGlobals: true,
@@ -67,7 +66,21 @@ gulp.task('browserify', function() {
              }))
              .pipe(gulp.dest('public/js/bundle'))
 });
+gulp.task('build-prod', function(cb) {
+  runSequence('babel-prod', 'browserify-prod', cb);
+});
+gulp.task('babel-prod', function() {
+  return gulp.src(babelPaths.src)
+             .pipe(babel())
+             .pipe(gulp.dest(babelPaths.dest));
+});
+gulp.task('browserify-prod', function() {
+  return gulp.src('public/js/facettest.js')
+             .pipe(browserify())
+             .pipe(uglify())
+             .pipe(gulp.dest('public/js/bundle'));
+});
 gulp.task('watch', function() {
-  gulp.watch(babelPaths.vdna, ['build']);
+  gulp.watch(babelPaths.vdna, ['build-dev']);
 });
 gulp.task('default', ['watch']);

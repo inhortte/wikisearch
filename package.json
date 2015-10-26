@@ -23,6 +23,7 @@
     "js-tokens": "*",
     "gulp-sourcemaps": "*",
     "gulp-util": "*",
+    "gulp-uglify": "*",
     "source-map-support": "*",
     "run-sequence": "*",
     "del": "*"
