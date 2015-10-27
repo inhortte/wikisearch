@@ -18,18 +18,23 @@ class FacetTest extends React.Component {
 
   submitLeprosy() {
     var that = this;
-    $.ajax({
-      method: 'POST',
-      data: { leprosy: this.state.leprosy },
-      dataType: 'json',
-      url: '/'
-    }).done(function(res, status, xhr) {
-      console.log('SUCCESS!!!!!!');
-      that.setState({facetMatches: res});
-      that.showFacets();
-    }).fail(function(xhr, status, err) {
-      console.log('ERROR: ' + status + JSON.stringify(err));
-    });
+    new Promise(resolve => this.setState({facetsShown: "Searching..."}, resolve))
+                               .then(function() {
+                                 $.ajax({
+                                   method: 'POST',
+                                   data: { leprosy: that.state.leprosy },
+                                   dataType: 'json',
+                                   url: '/'
+                                 }).done(function(res, status) {
+                                   console.log('SUCCESS!!!!!! - status: ' + status);
+                                   return new Promise(r => that.setState({facetMatches: res}, r))
+                                                               .then(() => that.showFacets());
+                                 }).fail(function(xhr, status, err) {
+                                   return new Promise(r => that.setState({facetsShown: "Error."}, r))
+                                                               .then(() => console.log('ERROR: ' + status + JSON.stringify(err)));
+                                 });
+                               })
+                               .catch(function(err) { console.error(err); });
   }
 
   showFacets() {
