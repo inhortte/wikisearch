@@ -58,6 +58,10 @@ class FacetTest extends React.Component {
                                .catch(function(err) { console.error(err); });
   }
 
+  dmozChange(e) {
+    console.log('DMOZ: ' + e.target.value);
+  }
+
   changeMatchesShown(n) {
     new Promise(resolve => this.setState({matchesShown: n}, resolve)).then(() => this.showFacets())
                                .catch(function(err) { console.error(err); });
@@ -73,6 +77,12 @@ class FacetTest extends React.Component {
 
         <table>
           <tbody>
+            <tr>
+              <td style={{width: '20%'}}>Choose, prosím:</td>
+              <td style={{width: '50%'}}>
+                <Dmoz dmozChange={this.dmozChange} />
+              </td>
+            </tr>
             <tr>
               <td style={{width: '20%'}}>Enter Snippet:</td>
               <td style={{border: '', width: '50%', padding: '5'}}>
@@ -113,6 +123,21 @@ class FacetTest extends React.Component {
     );
   }
 }
+
+class Dmoz extends React.Component {
+  handleChange(e) {
+    this.props.dmozChange(e);
+  }
+
+  render() {
+    return (
+      <div>
+        <input type="radio" name="dmoz" onChange={this.handleChange.bind(this)} value="Wikidump" />Wikidump
+        <input type="radio" name="dmoz" onChange={this.handleChange.bind(this)} value="DMOZ" />DMOZ
+      </div>
+    );
+  }
+};
 
 class FacetsShownSelect extends React.Component {
   constructor(props) {

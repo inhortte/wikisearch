@@ -4,6 +4,15 @@ let mongo = require('mongodb').MongoClient;
 let express = require('express');
 let bodyParser = require('body-parser');
 let app = express();
+
+app.use(function(req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, OPTIONS, PATCH, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  next();
+});
+
 app.use(bodyParser.urlencoded({ extended: false }));
 
 
@@ -11,7 +20,8 @@ mongo.connect('mongodb://127.0.0.1:27017/wikitest', function(err, db) {
   if(err) throw err;
 
   app.post('/', function(req, res) {
-    console.log(req.body.leprosy);
+    console.log(req.body);
+    // res.end(JSON.stringify({leprosy: ["Dead bunny", "Small wrist", "Pancreatic tumor", "Elephant dung"]}));
     let categories = [];
     db.collection('wiki', function(err, coll) {
       if(err) throw err;
@@ -27,9 +37,8 @@ mongo.connect('mongodb://127.0.0.1:27017/wikitest', function(err, db) {
             });
           }
         } else {
-          // db.close();
-          // console.log('\n----------------------CATEGORIES' + JSON.stringify(categories));
-          res.end(JSON.stringify(categories.slice(0,100)));
+          console.log('Number of deaths: ' + categories.length);
+          res.end(JSON.stringify({leprosy: categories.slice(0,100)}));
         }
       });
     });
