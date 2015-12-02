@@ -38,7 +38,8 @@ class FacetTest extends React.Component {
   }
 
   showFacets() {
-    let matches = this.state.facetMatches;
+    let matches = this.state.facetMatches['leprosy'];
+    console.log('matches: ' + JSON.stringify(matches));
     let filterer = this.state.fFilter.trim();
     if(filterer.length > 0) {
       let re = new RegExp(filterer, "i");
@@ -77,12 +78,13 @@ class FacetTest extends React.Component {
 
         <table>
           <tbody>
+            {/*
             <tr>
               <td style={{width: '20%'}}>Choose, prosím:</td>
               <td style={{width: '50%'}}>
                 <Dmoz dmozChange={this.dmozChange} />
               </td>
-            </tr>
+            </tr> */}
             <tr>
               <td style={{width: '20%'}}>Enter Snippet:</td>
               <td style={{border: '', width: '50%', padding: '5'}}>
