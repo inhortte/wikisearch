@@ -14,7 +14,8 @@
     "body-parser": "*",
     "react": "*",
     "react-dom": "*",
-    "jquery": "*"
+    "jquery": "*",
+    "immutable": "*"
   },
   "devDependencies": {
     "babel-core": "^6.1.21",
