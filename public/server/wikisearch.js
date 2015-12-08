@@ -1,11 +1,13 @@
-'use strict';
+import MongoClient from 'mongodb'
+// let mongo = require('mongodb').MongoClient;
+import express from 'express'
+// let express = require('express');
+import bodyParser from 'body-parser'
+// let bodyParser = require('body-parser');
 
-let mongo = require('mongodb').MongoClient;
-let express = require('express');
-let bodyParser = require('body-parser');
 let app = express();
 
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, OPTIONS, PATCH, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
@@ -15,18 +17,16 @@ app.use(function(req, res, next) {
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
-
-mongo.connect('mongodb://127.0.0.1:27017/wikitest', function(err, db) {
+MongoClient.connect('mongodb://127.0.0.1:27017/wikitest', (err, db) => {
   if(err) throw err;
 
-  app.post('/', function(req, res) {
+  app.post('/', (req, res) => {
     console.log(req.body);
-    // res.end(JSON.stringify({leprosy: ["Dead bunny", "Small wrist", "Pancreatic tumor", "Elephant dung"]}));
     let categories = [];
-    db.collection('wiki', function(err, coll) {
+    db.collection('wiki', (err, coll) => {
       if(err) throw err;
       let cursor = coll.find({allText: {$regex: req.body.leprosy, $options: 'i'}}, {categories: 1}).limit(100);
-      cursor.each(function(err, data) {
+      cursor.each((err, data) => {
         if(data !== null) {
           if(err) throw err;
           categories = categories.concat(data['categories']);
