@@ -40,7 +40,23 @@ class FacetTest extends React.Component {
   }
 
   submitHtml() {
-    this.setState({htmlResult: '<h1>I am a leper</h1>'})
+    new Promise(resolve => this.setState({htmlResult: "Processing..."}, resolve))
+      .then(() => {
+        $.ajax({
+          method: 'POST',
+          data: {
+            html: this.state.html,
+            leprosy: this.state.leprosy
+          },
+          dataType: 'json',
+          url: '/retag'
+        }).done((res, status) => {
+          console.log('HTML SUCCESS!!!! - status: ' + JSON.stringify(res))
+          return new Promise(r => this.setState({htmlResult: res.html}, r))
+        }).fail((xhr, status, err) => {
+          return new Promise(r => this.setState({htmlResult: 'Error: ' + status + " - " + JSON.stringify(err)}, r))
+        })
+      }).catch((err) => console.error(err))
   }
 
   showFacets() {
