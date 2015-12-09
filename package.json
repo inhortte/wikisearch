@@ -16,7 +16,8 @@
     "react-dom": "*",
     "jquery": "*",
     "immutable": "*",
-    "socket.io-client": "*"
+    "socket.io-client": "*",
+    "cheerio": "*"
   },
   "devDependencies": {
     "babel-core": "^6.1.21",
