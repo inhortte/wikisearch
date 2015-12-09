@@ -89,7 +89,7 @@ MongoClient.connect('mongodb://127.0.0.1:27017/wikitest', (err, db) => {
           console.log('setting cats to: ' + JSON.stringify(cats))
           io.emit('setCats', { cats: cats })
             let $ = cheerio.load(wrapHtmlInRootDiv(req.body.html))
-            let newHTML = 'thurk: ' // replace this with string-buffer
+            let newHTML = '' // replace this with string-buffer
             io.on('catsAdded', data => {
               console.log('adding: ' + data.div)
               newHTML += data.div + "\n"
