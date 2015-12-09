@@ -1,6 +1,7 @@
 import MongoClient from 'mongodb'
 import express from 'express'
 import bodyParser from 'body-parser'
+const io = require('socket.io-client')('http://localhost:9187')
 
 const app = express();
 
@@ -14,19 +15,27 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
+// io.on('sendDiv', data => {
+//   console.log('received: ' + data.div)
+// })
+// io.emit('setCats', { cats: ['helium', 'argon', 'neon', 'xenon', 'radon'] })
+// io.emit('addCats', { div: '<h1>I am a leper</h1>' })
+
 MongoClient.connect('mongodb://127.0.0.1:27017/wikitest', (err, db) => {
   if(err) throw err;
 
-  app.post('/', (req, res) => {
-    console.log(req.body);
+  const getCategories = (db, collName, text, limit, cb) => {
+    console.log('getCategories: ' + collName + ' -- ' + text + ' -- ' + limit)
     let categories = {}
-    db.collection('wiki', (err, coll) => {
-      if(err) throw err;
-      let cursor = coll.find({allText: {$regex: req.body.leprosy, $options: 'i'}}, {categories: 1}).limit(100);
+    db.collection(collName, (err, coll) => {
+      if(err) throw err
+      let cursor = coll.find({allText: {$regex: text, $options: 'i'}}, {categories: 1}).limit(limit)
+      console.log('cursor defined')
       cursor.each((err, data) => {
         if(data !== null) {
-          if(err) throw err;
+          if(err) throw err
           let cats = data['categories']
+          console.log('data cat length ' + cats.length)
           cats.forEach(cat => {
             if(categories[cat] === undefined) {
               categories[cat] = 1
@@ -34,25 +43,31 @@ MongoClient.connect('mongodb://127.0.0.1:27017/wikitest', (err, db) => {
               categories[cat] = categories[cat] + 1
             }
           })
-          // categories = categories.concat(data['categories']);
-
-          if(Object.keys(categories).length > 1000) {
-            cursor.close(function() {
-              console.log('cursor closed');
-            });
+          if(Object.keys(categories).length > limit * 10) {
+            cursor.close(() => {
+              console.log('cursor closed.....')
+              cb(categories)
+            })
           }
         } else {
-          console.log('Number of deaths: ' + Object.keys(categories).length);
-          res.end(JSON.stringify({
-            leprosy: Object.keys(categories).sort((a, b) => {
-              return categories[b] - categories[a]
-            }).map((cat) => {
-              return cat + ' (' + categories[cat] + ')'
-            })
-          }));
+          cb(categories)
         }
-      });
-    });
+      })
+    })
+  }
+
+  app.post('/', (req, res) => {
+    console.log(req.body);
+    getCategories(db, 'wiki', req.body.leprosy, 1000, categories => {
+      console.log('Number of deaths: ' + Object.keys(categories).length);
+      res.end(JSON.stringify({
+        leprosy: Object.keys(categories).sort((a, b) => {
+          return categories[b] - categories[a]
+        }).map((cat) => {
+          return cat + ' (' + categories[cat] + ')'
+        })
+      }));
+    })
   });
 
   app.use(express.static('public'));

@@ -15,7 +15,8 @@
     "react": "*",
     "react-dom": "*",
     "jquery": "*",
-    "immutable": "*"
+    "immutable": "*",
+    "socket.io-client": "*"
   },
   "devDependencies": {
     "babel-core": "^6.1.21",

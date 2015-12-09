@@ -54,7 +54,7 @@ gulp.task('babel-dev', function() {
   return gulp.src(babelPaths.src)
              .pipe(sourcemaps.init())
              .pipe(babel({
-               sourceMaps: 'inline'
+               presets: ['es2015', 'react']
              }))
              .pipe(gulp.dest(babelPaths.dest));
 });
@@ -71,7 +71,9 @@ gulp.task('build-prod', function(cb) {
 });
 gulp.task('babel-prod', function() {
   return gulp.src(babelPaths.src)
-             .pipe(babel())
+             .pipe(babel({
+               presets: ['es2015', 'react']
+             }))
              .pipe(gulp.dest(babelPaths.dest));
 });
 gulp.task('browserify-prod', function() {
@@ -81,6 +83,6 @@ gulp.task('browserify-prod', function() {
              .pipe(gulp.dest('public/js/bundle'));
 });
 gulp.task('watch', function() {
-  gulp.watch(babelPaths.vdna, ['build-dev']);
+  gulp.watch(babelPaths.src, ['build-dev']);
 });
 gulp.task('default', ['watch']);

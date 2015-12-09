@@ -12,7 +12,9 @@ class FacetTest extends React.Component {
       facetMatches: ['US Election', 'US Politics', 'Republican Party', 'Current Events', 'Donald Mumps'],
       facetsShown: 'US Election, US Politics, Republican Party, Current Events, Donald Mumps',
       matchesShown: 10,
-      fFilter: ''
+      fFilter: '',
+      html: this.props.html,
+      htmlResult: ''
     }
   }
 
@@ -37,6 +39,10 @@ class FacetTest extends React.Component {
                                .catch(function(err) { console.error(err); });
   }
 
+  submitHtml() {
+    this.setState({htmlResult: '<h1>I am a leper</h1>'})
+  }
+
   showFacets() {
     let matches = this.state.facetMatches['leprosy'];
     console.log('matches: ' + JSON.stringify(matches));
@@ -52,6 +58,10 @@ class FacetTest extends React.Component {
 
   leperChange(e) {
     this.setState({leprosy: e.target.value});
+  }
+
+  htmlChange(e) {
+    this.setState({html: e.target.value})
   }
 
   fFilterChange(e) {
@@ -78,13 +88,6 @@ class FacetTest extends React.Component {
 
         <table>
           <tbody>
-            {/*
-            <tr>
-              <td style={{width: '20%'}}>Choose, prosím:</td>
-              <td style={{width: '50%'}}>
-                <Dmoz dmozChange={this.dmozChange} />
-              </td>
-            </tr> */}
             <tr>
               <td style={{width: '20%'}}>Enter Snippet:</td>
               <td style={{border: '', width: '50%', padding: '5'}}>
@@ -100,8 +103,34 @@ class FacetTest extends React.Component {
         <table>
           <tbody>
             <tr>
+              <td style={{width: '20%'}}>Enter html elements:</td>
+              <td style={{border: '', width: '50%', padding: '5'}}>
+                <LeperForm leperChange={this.htmlChange.bind(this)} submitLeprosy={this.submitHtml.bind(this)} leprosy={this.state.html} />
+              </td>
+              <td style={{width: '20%', paddingLeft: '50'}}>Only the top level elements will be ~transformed~</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <hr />
+
+        <table>
+          <tbody>
+            <tr>
               <td style={{width: '20%', valign: 'top'}}>Facet Matches:</td>
               <td style={{width: '50%', border: '1px solid white', padding: '5'}}>{this.state.facetsShown}</td>
+              <td style={{width: '20%'}}></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <hr />
+
+        <table>
+          <tbody>
+            <tr>
+              <td style={{width: '20%', valign: 'top'}}>Resultant html:</td>
+              <td style={{width: '50%', border: '1px solid white', padding: '5'}}>{this.state.htmlResult}</td>
               <td style={{width: '20%'}}></td>
             </tr>
           </tbody>
@@ -125,21 +154,6 @@ class FacetTest extends React.Component {
     );
   }
 }
-
-class Dmoz extends React.Component {
-  handleChange(e) {
-    this.props.dmozChange(e);
-  }
-
-  render() {
-    return (
-      <div>
-        <input type="radio" name="dmoz" onChange={this.handleChange.bind(this)} value="Wikidump" />Wikidump
-        <input type="radio" name="dmoz" onChange={this.handleChange.bind(this)} value="DMOZ" />DMOZ
-      </div>
-    );
-  }
-};
 
 class FacetsShownSelect extends React.Component {
   constructor(props) {
