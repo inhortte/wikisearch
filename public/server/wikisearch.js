@@ -88,20 +88,27 @@ MongoClient.connect('mongodb://127.0.0.1:27017/wikitest', (err, db) => {
           }).slice(0, 10)
           console.log('setting cats to: ' + JSON.stringify(cats))
           io.emit('setCats', { cats: cats })
-            let $ = cheerio.load(wrapHtmlInRootDiv(req.body.html))
-            let newHTML = '' // replace this with string-buffer
-            io.on('catsAdded', data => {
-              console.log('adding: ' + data.div)
-              newHTML += data.div + "\n"
-            })
-            io.on('completo', () => {
-              res.end(JSON.stringify({html: newHTML}))
-            })
-            $('*', '#wikiSearchRootDiv').each((index, el) => {
-              io.emit('setSnippet', { snip: $.html(el) })
-              io.emit('catsToSnip')
-            })
-            io.emit('completo')
+          let $ = cheerio.load(wrapHtmlInRootDiv(req.body.html))
+          let newHTML = '' // replace this with string-buffer
+
+          /*
+             The category server (james.js) emits a catsAdded event to append to transformed html.
+             When all is done, completo is sent to the server and the server 'handshakes' back,
+             indicating every element has been transformed.
+          */
+          io.on('catsAdded', data => {
+            console.log('adding: ' + data.div)
+            newHTML += data.div
+          })
+          io.on('completo', () => {
+            res.end(JSON.stringify({html: newHTML}))
+          })
+
+          $('>', '#wikiSearchRootDiv').each((index, el) => {
+            io.emit('setSnippet', { snip: $.html(el) })
+            io.emit('catsToSnip')
+          })
+          io.emit('completo')
         })
       } else {
         res.send(JSON.stringify({html: "you must enter a snippet"}))
