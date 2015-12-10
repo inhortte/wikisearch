@@ -14,7 +14,8 @@ var jsDir = 'public/js';
 var nodeBin = '/home/polaris/bin';
 
 var babelPaths = {
-  src: [path.join(srcDir, '*.js')],
+  src: [path.join(srcDir, 'facettest.js')],
+  gungeSrc: [path.join(srcDir, 'facetgunge.js')],
   dest: jsDir
 };
 gulp.task('clean', function() {
@@ -47,6 +48,9 @@ gulp.task('rewire', function() {
     gutil.log("You access complete stdout and stderr from here"); // stdout, stderr
   });
 });
+
+// stable
+
 gulp.task('build-dev', function(cb) {
   runSequence('babel-dev', 'browserify-dev', cb);
 });
@@ -66,6 +70,31 @@ gulp.task('browserify-dev', function() {
              }))
              .pipe(gulp.dest('public/js/bundle'))
 });
+
+// experimental
+
+gulp.task('build-gunge', function(cb) {
+  runSequence('babel-gunge', 'browserify-gunge', cb);
+});
+gulp.task('babel-gunge', function() {
+  return gulp.src(babelPaths.gungeSrc)
+             .pipe(sourcemaps.init())
+             .pipe(babel({
+               presets: ['es2015', 'react']
+             }))
+             .pipe(gulp.dest(babelPaths.dest));
+});
+gulp.task('browserify-gunge', function() {
+  return gulp.src('public/js/facetgunge.js')
+             .pipe(browserify({
+               insertGlobals: true,
+               debug: true
+             }))
+             .pipe(gulp.dest('public/js/bundle'))
+});
+
+// ------------
+
 gulp.task('build-prod', function(cb) {
   runSequence('babel-prod', 'browserify-prod', cb);
 });
