@@ -26,8 +26,6 @@ const wrapHtmlInRootDiv = html => {
   return '<div id="wikiSearchRootDiv">' + html + '</div>'
 }
 
-console.log('we are here')
-
 MongoClient.connect('mongodb://127.0.0.1:27017/wikitest', (err, db) => {
   if(err) throw err;
 
@@ -42,7 +40,6 @@ MongoClient.connect('mongodb://127.0.0.1:27017/wikitest', (err, db) => {
         if(data !== null) {
           if(err) throw err
           let cats = data['categories']
-          console.log('data cat length ' + cats.length)
           cats.forEach(cat => {
             if(categories[cat] === undefined) {
               categories[cat] = 1
