@@ -11,9 +11,13 @@ var gutil       = require('gulp-util');
 var path = require('path');
 var srcDir = 'public/srcjs';
 var jsDir = 'public/js';
+var serverSrcDir = 'src';
+var serverDestDir = 'server';
 var nodeBin = '/home/polaris/bin';
 
 var babelPaths = {
+  serverSrc: [path.join(serverSrcDir, '*.js')],
+  serverDest: serverDestDir,
   src: [path.join(srcDir, 'facettest.js')],
   gungeSrc: [path.join(srcDir, 'facetgunge.js')],
   dest: jsDir
@@ -22,6 +26,7 @@ gulp.task('clean', function() {
   del([
     path.join(jsDir, '*.js'),
     path.join(jsDir, 'bundle'),
+    path.join(src, '*.js')
   ]);
 });
 gulp.task('rewire', function() {
@@ -50,6 +55,43 @@ gulp.task('rewire', function() {
 });
 
 // build the server
+
+gulp.task('build-server', function(cb) {
+  return gulp.src(babelPaths.serverSrc)
+             .pipe(sourcemaps.init())
+             .pipe(babel({
+               presets: ['es2015']
+             }))
+             .pipe(sourcemaps.write('.'))
+             .pipe(gulp.dest(babelPaths.serverDest));
+});
+
+// run the server
+
+gulp.task('server', ['build-server'], function() {
+  var child = spawn(path.join(nodeBin, 'node4'), [path.join(babelPaths.serverDest, '/wikisearch.js')], {cwd: process.cwd()}),
+      stdout = '',
+      stderr = '';
+
+  child.stdout.setEncoding('utf8');
+
+  child.stdout.on('data', function (data) {
+    stdout += data;
+    gutil.log(data);
+  });
+
+  child.stderr.setEncoding('utf8');
+  child.stderr.on('data', function (data) {
+    stderr += data;
+    gutil.log(gutil.colors.red(data));
+    gutil.beep();
+  });
+
+  child.on('close', function(code) {
+    gutil.log("Done with exit code", code);
+    gutil.log("You access complete stdout and stderr from here"); // stdout, stderr
+  });
+});
 
 // stable
 
