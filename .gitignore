@@ -9,3 +9,4 @@ public/bower_components*
 public/js
 wiki_*
 flycheck*
+server

@@ -9,9 +9,6 @@
   "author": "Bob Shelton",
   "license": "ISC",
   "dependencies": {
-    "mongodb": "*",
-    "express": "*",
-    "body-parser": "*",
     "react": "*",
     "react-dom": "*",
     "jquery": "*",
@@ -34,7 +31,10 @@
     "gulp-uglify": "*",
     "source-map-support": "*",
     "run-sequence": "*",
-    "del": "*"
+    "del": "*",
+    "mongodb": "*",
+    "express": "*",
+    "body-parser": "*"
   },
   "engines": {
     "node": ">=0.12.0"
