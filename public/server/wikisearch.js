@@ -1,7 +1,6 @@
 import MongoClient from 'mongodb'
 import express from 'express'
 import bodyParser from 'body-parser'
-// import jQuery from 'jquery'
 import cheerio from 'cheerio'
 const io = require('socket.io-client')('http://localhost:9187')
 
@@ -26,6 +25,8 @@ io.on('death', () => {
 const wrapHtmlInRootDiv = html => {
   return '<div id="wikiSearchRootDiv">' + html + '</div>'
 }
+
+console.log('we are here')
 
 MongoClient.connect('mongodb://127.0.0.1:27017/wikitest', (err, db) => {
   if(err) throw err;
