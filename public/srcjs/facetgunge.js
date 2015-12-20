@@ -111,11 +111,11 @@ class FacetTest extends React.Component {
         <table>
           <tbody>
             <tr>
-              <td style={{width: '20%'}}>Enter html elements:</td>
+              <td style={{width: '20%'}}>Enter wrapped elements:</td>
               <td style={{border: '', width: '50%', padding: '5'}}>
                 <LeperForm submitLeprosy={this.submitHtml.bind(this)} leperChange={() => {}} />
               </td>
-              <td style={{width: '20%', paddingLeft: '50'}}>Only the top level elements will be ~transformed~</td>
+              <td style={{width: '20%', paddingLeft: '50'}}>The top element must have a vdnaroot attribute. Each child element will be transformed.~</td>
             </tr>
           </tbody>
         </table>
