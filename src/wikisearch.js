@@ -7,6 +7,8 @@ const io = require('socket.io-client')('http://localhost:9187')
 const app = express();
 let connectedToJames = false
 
+const mongoHost = '95.211.173.196'
+
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, OPTIONS, PATCH, DELETE');
@@ -26,7 +28,7 @@ const wrapHtmlInRootDiv = html => {
   return '<div id="wikiSearchRootDiv">' + html + '</div>'
 }
 
-MongoClient.connect('mongodb://127.0.0.1:27017/wikitest', (err, db) => {
+MongoClient.connect('mongodb://' + mongoHost + ':27017/wikitest', (err, db) => {
   if(err) throw err;
 
   const getCategories = (db, collName, text, limit, cb) => {
